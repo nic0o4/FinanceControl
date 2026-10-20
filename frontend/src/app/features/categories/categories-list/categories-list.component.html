@@ -1,0 +1,40 @@
+<div class="page">
+  <div class="page-header">
+    <h1>Categorías</h1>
+    <a routerLink="create" class="btn">Nueva categoría</a>
+  </div>
+
+  <div class="alert alert-error" *ngIf="error">{{ error }}</div>
+
+  <table class="table" *ngIf="!loading">
+    <thead>
+      <tr>
+        <th>Nombre</th>
+        <th>Descripción</th>
+        <th>Estado</th>
+        <th>Acciones</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let c of categories">
+        <td>{{ c.name }}</td>
+        <td>{{ c.description }}</td>
+        <td>
+          <span class="badge" [class.active]="c.isActive === 1"
+            >{{ c.isActive === 1 ? 'Activa' : 'Inactiva' }}</span
+          >
+        </td>
+        <td>
+          <button class="btn btn-sm" (click)="toggleStatus(c, c.isActive !== 1)">
+            {{ c.isActive === 1 ? 'Desactivar' : 'Activar' }}
+          </button>
+          <button class="btn btn-sm btn-danger" (click)="remove(c)">
+            Eliminar
+          </button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+  <p *ngIf="loading">Cargando...</p>
+</div>

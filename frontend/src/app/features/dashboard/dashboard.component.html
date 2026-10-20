@@ -1,0 +1,33 @@
+<div class="page">
+  <h1>Panel de control</h1>
+  <div class="alert alert-error" *ngIf="error">{{ error }}</div>
+
+  <div class="stats-grid" *ngIf="!loading">
+    <div class="stat-card">
+      <div class="stat-label">Cuentas activas</div>
+      <div class="stat-value">{{ stats.activeAccounts ?? 0 }}</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Total movimientos</div>
+      <div class="stat-value">{{ stats.totalTransactions ?? 0 }}</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Movimientos pendientes</div>
+      <div class="stat-value">{{ stats.pendingTransactions ?? 0 }}</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Ingresos totales</div>
+      <div class="stat-value">{{ stats.totalIncome ?? 0 }}</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Gastos totales</div>
+      <div class="stat-value">{{ stats.totalExpense ?? 0 }}</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Saldo neto</div>
+      <div class="stat-value">{{ stats.netAmount ?? 0 }}</div>
+    </div>
+  </div>
+
+  <p *ngIf="loading">Cargando...</p>
+</div>

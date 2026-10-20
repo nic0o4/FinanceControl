@@ -1,0 +1,22 @@
+<div class="page">
+  <div class="page-header">
+    <h1>Nueva categoría</h1>
+    <button class="btn btn-ghost" (click)="goBack()">Volver</button>
+  </div>
+
+  <div class="alert alert-error" *ngIf="error">{{ error }}</div>
+
+  <form (ngSubmit)="onSubmit()" [formGroup]="form" class="form">
+    <div class="field">
+      <label>Nombre</label>
+      <input type="text" formControlName="name" placeholder="Ej. Compras" />
+    </div>
+    <div class="field">
+      <label>Descripción</label>
+      <input type="text" formControlName="description" placeholder="Descripción opcional" />
+    </div>
+    <div class="actions">
+      <button type="submit" class="btn" [disabled]="loading">Crear categoría</button>
+    </div>
+  </form>
+</div>

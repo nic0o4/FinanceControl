@@ -1,0 +1,62 @@
+<aside class="sidebar" [class.open]="isMenuOpen">
+  <div class="sidebar-brand">
+    <a routerLink="/dashboard" routerLinkActive="active">ControlFinanciero</a>
+  </div>
+  <nav class="sidebar-nav">
+    <a
+      routerLink="/dashboard"
+      routerLinkActive="active"
+      (click)="closeMenu()"
+      >Resumen</a
+    >
+    <a
+      routerLink="/transactions"
+      routerLinkActive="active"
+      (click)="closeMenu()"
+      >Movimientos</a
+    >
+    <a
+      routerLink="/accounts"
+      routerLinkActive="active"
+      (click)="closeMenu()"
+      >Cuentas</a
+    >
+    <a
+      routerLink="/categories"
+      routerLinkActive="active"
+      (click)="closeMenu()"
+      >Categorías</a
+    >
+    <a
+      routerLink="/classification-rules"
+      routerLinkActive="active"
+      (click)="closeMenu()"
+      >Reglas de clasificación</a
+    >
+    <a
+      routerLink="/import"
+      routerLinkActive="active"
+      (click)="closeMenu()"
+      >Importar Excel</a
+    >
+  </nav>
+  <div class="sidebar-footer">
+    <button (click)="logout()">Cerrar sesión</button>
+  </div>
+</aside>
+
+<div class="app-wrap">
+  <header class="topbar">
+    <button class="menu-toggle" (click)="toggleMenu()">
+      <span></span>
+      <span></span>
+      <span></span>
+    </button>
+    <span class="topbar-title">ControlFinanciero</span>
+    <span class="topbar-user">{{ currentUser?.username ?? 'Usuario' }}</span>
+  </header>
+
+  <main class="content">
+    <router-outlet></router-outlet>
+  </main>
+</div>

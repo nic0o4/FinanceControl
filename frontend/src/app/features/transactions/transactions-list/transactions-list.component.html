@@ -1,0 +1,46 @@
+<div class="page">
+  <div class="page-header">
+    <h1>Movimientos</h1>
+    <a routerLink="../import" class="btn">Importar Excel</a>
+  </div>
+
+  <div class="alert alert-error" *ngIf="error">{{ error }}</div>
+
+  <table class="table" *ngIf="!loading">
+    <thead>
+      <tr>
+        <th>Fecha</th>
+        <th>Descripción</th>
+        <th>Concepto</th>
+        <th>Importe</th>
+        <th>Categoría</th>
+        <th>Acción</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let t of transactions">
+        <td>{{ t.operationDate }}</td>
+        <td>{{ t.description }}</td>
+        <td>{{ t.concept }}</td>
+        <td class="amount">{{ t.amount }} {{ t.currency }}</td>
+        <td>
+          <select
+            (change)="onCategoryChange(t.id, $event)"
+            [value]="t.categoryId || ''"
+          >
+            <option value="">Sin categoría</option>
+            <option *ngFor="let c of categories" [value]="c.id">
+              {{ c.name }}
+            </option>
+          </select>
+        </td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+
+  <p *ngIf="loading">Cargando...</p>
+  <p *ngIf="transactions.length === 0 && !error && !loading">
+    No hay movimientos registrados.
+  </p>
+</div>

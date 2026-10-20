@@ -1,0 +1,44 @@
+<div class="page">
+  <div class="page-header">
+    <h1>Cuentas bancarias</h1>
+    <a routerLink="create" class="btn">Nueva cuenta</a>
+  </div>
+
+  <div class="alert alert-error" *ngIf="error">{{ error }}</div>
+
+  <table class="table" *ngIf="!loading">
+    <thead>
+      <tr>
+        <th>Descripción</th>
+        <th>Banco</th>
+        <th>Tipo</th>
+        <th>Moneda</th>
+        <th>Estado</th>
+        <th>Acciones</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let a of accounts">
+        <td>{{ a.description }}</td>
+        <td>{{ a.bankName }}</td>
+        <td>{{ a.accountType }}</td>
+        <td>{{ a.currency }}</td>
+        <td>
+          <span class="badge" [class.active]="a.isActive === 1"
+            >{{ a.isActive === 1 ? 'Activa' : 'Inactiva' }}</span
+          >
+        </td>
+        <td>
+          <button class="btn btn-sm" (click)="toggleStatus(a, a.isActive !== 1)">
+            {{ a.isActive === 1 ? 'Desactivar' : 'Activar' }}
+          </button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+  <p *ngIf="loading">Cargando...</p>
+  <p *ngIf="accounts.length === 0 && !error && !loading">
+    No hay cuentas registradas.
+  </p>
+</div>

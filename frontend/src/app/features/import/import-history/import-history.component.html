@@ -1,0 +1,34 @@
+<div class="page">
+  <div class="page-header">
+    <h1>Historial de importaciones</h1>
+  </div>
+
+  <div class="alert alert-error" *ngIf="error">{{ error }}</div>
+
+  <table class="table" *ngIf="!loading">
+    <thead>
+      <tr>
+        <th>Archivo</th>
+        <th>Cuenta</th>
+        <th>Estado</th>
+        <th>Filas</th>
+        <th>Insertados</th>
+        <th>Duplicados</th>
+        <th>Iniciado</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let imp of imports">
+        <td>{{ imp.filename }}</td>
+        <td>{{ imp.accountId }}</td>
+        <td>{{ imp.status }}</td>
+        <td>{{ imp.totalRows }}</td>
+        <td>{{ imp.insertedRows }}</td>
+        <td>{{ imp.duplicateRows }}</td>
+        <td>{{ imp.startedAt }}</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <p *ngIf="loading">Cargando...</p>
+</div>

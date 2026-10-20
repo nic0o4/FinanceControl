@@ -1,0 +1,32 @@
+<div class="page">
+  <div class="page-header">
+    <h1>Nueva cuenta</h1>
+    <a routerLink=".." class="btn btn-ghost">Volver</a>
+  </div>
+
+  <div class="alert alert-error" *ngIf="error">{{ error }}</div>
+
+  <form (ngSubmit)="onSubmit()" [formGroup]="form" class="form">
+    <div class="field">
+      <label>Descripción</label>
+      <input type="text" formControlName="description" placeholder="Ej. Cuenta Corriente" />
+    </div>
+    <div class="field">
+      <label>Banco</label>
+      <input type="text" formControlName="bankName" placeholder="Ej. Banco Ejemplo" />
+    </div>
+    <div class="field">
+      <label>Tipo de cuenta</label>
+      <select formControlName="accountType">
+        <option *ngFor="let t of accountTypes" [value]="t">{{ t }}</option>
+      </select>
+    </div>
+    <div class="field">
+      <label>Moneda</label>
+      <input type="text" formControlName="currency" placeholder="EUR" />
+    </div>
+    <div class="actions">
+      <button type="submit" class="btn" [disabled]="loading">Crear cuenta</button>
+    </div>
+  </form>
+</div>

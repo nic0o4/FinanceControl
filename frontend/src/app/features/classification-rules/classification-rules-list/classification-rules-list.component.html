@@ -1,0 +1,40 @@
+<div class="page">
+  <div class="page-header">
+    <h1>Reglas de clasificación</h1>
+    <a routerLink="create" class="btn">Nueva regla</a>
+  </div>
+
+  <div class="alert alert-error" *ngIf="error">{{ error }}</div>
+
+  <table class="table" *ngIf="!loading">
+    <thead>
+      <tr>
+        <th>Nombre</th>
+        <th>Prioridad</th>
+        <th>Estado</th>
+        <th>Acciones</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let r of rules">
+        <td>{{ r.name }}</td>
+        <td>{{ r.priority }}</td>
+        <td>
+          <span class="badge" [class.active]="r.isActive === 1"
+            >{{ r.isActive === 1 ? 'Activa' : 'Inactiva' }}</span
+          >
+        </td>
+        <td>
+          <button class="btn btn-sm" (click)="toggleStatus(r, r.isActive !== 1)">
+            {{ r.isActive === 1 ? 'Desactivar' : 'Activar' }}
+          </button>
+          <button class="btn btn-sm btn-danger" (click)="remove(r)">
+            Eliminar
+          </button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+  <p *ngIf="loading">Cargando...</p>
+</div>

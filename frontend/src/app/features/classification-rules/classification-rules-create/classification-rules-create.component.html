@@ -1,0 +1,38 @@
+<div class="page">
+  <div class="page-header">
+    <h1>Nueva regla de clasificación</h1>
+    <button class="btn btn-ghost" (click)="goBack()">Volver</button>
+  </div>
+
+  <div class="alert alert-error" *ngIf="error">{{ error }}</div>
+
+  <form (ngSubmit)="onSubmit()" [formGroup]="form" class="form">
+    <div class="field">
+      <label>Nombre</label>
+      <input type="text" formControlName="name" placeholder="Ej. Regla supermercado" />
+    </div>
+    <div class="field">
+      <label>Categoría</label>
+      <select formControlName="categoryId">
+        <option value="">Seleccionar</option>
+        <option *ngFor="let c of categories" [value]="c.id">{{ c.name }}</option>
+      </select>
+    </div>
+    <div class="field">
+      <label>Prioridad</label>
+      <input type="number" formControlName="priority" placeholder="0" />
+    </div>
+    <div class="field">
+      <label>Condiciones (JSON)</label>
+      <textarea
+        formControlName="conditionsJson"
+        placeholder='{"field": "description", "operator": "contains", "value": "SUPERMERCADO"}'
+        rows="4"
+      ></textarea>
+      <small class="hint">JSON con las condiciones de la regla.</small>
+    </div>
+    <div class="actions">
+      <button type="submit" class="btn" [disabled]="loading">Crear regla</button>
+    </div>
+  </form>
+</div>

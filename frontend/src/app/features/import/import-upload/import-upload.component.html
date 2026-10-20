@@ -1,0 +1,59 @@
+<div class="page">
+  <div class="page-header">
+    <h1>Importar movimientos (Excel)</h1>
+    <a routerLink="../import/history" class="btn btn-ghost">Historial</a>
+  </div>
+
+  <div class="alert alert-error" *ngIf="error">{{ error }}</div>
+
+  <div class="card">
+    <div class="card-body">
+      <div class="field">
+        <label>Cuenta destino</label>
+        <select [(ngModel)]="accountId">
+          <option value="">Seleccionar cuenta</option>
+          <option *ngFor="let a of accounts" [value]="a.id">{{ a.description }}</option>
+        </select>
+      </div>
+      <div class="field">
+        <label>Archivo Excel (.xlsx, .xls)</label>
+        <input type="file" accept=".xlsx,.xls" (change)="onFileSelected($event)" />
+        <span *ngIf="file" class="file-name">{{ file.name }}</span>
+      </div>
+      <div class="actions">
+        <button class="btn" (click)="previewFile()" [disabled]="!file || loading">
+          Previsualizar
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div class="preview" *ngIf="preview">
+    <h3>Previsualización</h3>
+    <p>Total: {{ preview.totalRows }} | Nuevos: {{ preview.newRows?.length }} | Duplicados: {{ preview.duplicates?.length }}</p>
+    <div class="actions">
+      <button class="btn btn-danger" (click)="cancel()">Cancelar</button>
+      <button class="btn" (click)="confirm()" [disabled]="!accountId">Confirmar importación</button>
+    </div>
+    <table class="table">
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Fecha</th>
+          <th>Descripción</th>
+          <th>Importe</th>
+          <th>Estado</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let row of preview.newRows; let i = index">
+          <td>{{ i + 1 }}</td>
+          <td>{{ row.operation_date || row.fecha || '' }}</td>
+          <td>{{ row.description || row.descripcion || '' }}</td>
+          <td>{{ row.amount || row.importe || '' }}</td>
+          <td><span class="badge badge-new">Nuevo</span></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
