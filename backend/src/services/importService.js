@@ -215,6 +215,21 @@ function previewFile(filePath, accountId) {
     throw error;
   }
 
+  // Import configuration from account (if any)
+  const skipRows = parseInt(account.import_skip_rows || 0, 10);
+  let configuredMapping = null;
+  if (
+    account.import_column_mapping &&
+    account.import_column_mapping.trim() !== '' &&
+    account.import_column_mapping !== '{}'
+  ) {
+    try {
+      configuredMapping = JSON.parse(account.import_column_mapping);
+    } catch {
+      // fall back to auto-detection below
+    }
+  }
+
   const workbook = XLSX.readFile(filePath);
   const sheetNames = workbook.SheetNames;
 
@@ -229,22 +244,33 @@ function previewFile(filePath, accountId) {
   const worksheet = workbook.Sheets[sheetName];
   const jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1, defval: '' });
 
-  if (jsonData.length < 2) {
-    const error = new Error('La hoja no contiene datos suficientes (encabezado + al menos una fila).');
+  // Need: skipRows rows + 1 header row + at least 1 data row
+  if (jsonData.length < skipRows + 2) {
+    const error = new Error(
+      'La hoja no contiene datos suficientes (filas omitidas + encabezado + al menos una fila de datos).'
+    );
     error.statusCode = 400;
     throw error;
   }
 
-  const headers = jsonData[0].map(h => String(h || '').trim());
-  const mapping = detectMapping(headers);
-  mapping._headers = headers;
+  // Skip configured rows, then the next row is the header
+  const dataFromSkip = jsonData.slice(skipRows);
+  const headers = dataFromSkip[0].map((h) => String(h || '').trim());
 
-  const dataRows = jsonData.slice(1);
+  let mapping;
+  if (configuredMapping) {
+    mapping = { ...configuredMapping, _headers: headers };
+  } else {
+    mapping = detectMapping(headers);
+    mapping._headers = headers;
+  }
+
+  const dataRows = dataFromSkip.slice(1);
   const parsedRows = [];
   const errors = [];
 
   dataRows.forEach((row, index) => {
-    const rowNum = index + 2; // Excel row number (1-based, +1 for header)
+    const rowNum = index + skipRows + 2; // Excel row number (1-based, +1 for header, +skipRows)
     try {
       const normalized = normalizeRow(row, mapping);
       // Skip completely empty rows

@@ -8,6 +8,8 @@ export interface Account {
   createdAt: string;
   updatedAt: string;
   transactionCount?: number;
+  importSkipRows?: number;
+  importColumnMapping?: Record<string, number>;
 }
 
 export interface AccountCreateRequest {
@@ -15,13 +17,17 @@ export interface AccountCreateRequest {
   bankName: string;
   accountType: string;
   currency: string;
+  importSkipRows?: number;
+  importColumnMapping?: Record<string, number>;
 }
 
 export interface AccountUpdateRequest {
-  description: string;
-  bankName: string;
-  accountType: string;
-  currency: string;
+  description?: string;
+  bankName?: string;
+  accountType?: string;
+  currency?: string;
+  importSkipRows?: number;
+  importColumnMapping?: Record<string, number>;
 }
 
 export type AccountType = 'CURRENT' | 'SAVINGS' | 'CREDIT_CARD' | 'INVESTMENT' | 'OTHER';

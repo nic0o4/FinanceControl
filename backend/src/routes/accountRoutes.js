@@ -18,7 +18,7 @@ router.post(
 router.get('/:id', accountController.getAccount);
 router.patch(
   '/:id',
-  validateBody(['description', 'bankName', 'accountType', 'currency']),
+  validateBody([]),
   accountController.updateAccount
 );
 router.patch('/:id/status', validateBody(['isActive']), accountController.toggleAccountStatus);

@@ -1,46 +1,66 @@
 <div class="page">
   <div class="page-header">
-    <h1>Movimientos</h1>
-    <a routerLink="../import" class="btn">Importar Excel</a>
+    <div>
+      <h1>Movimientos</h1>
+      <p class="subtitle">Listado de todas las transacciones registradas</p>
+    </div>
+    <a routerLink="../import" class="btn btn-primary">Importar Excel</a>
   </div>
 
   <div class="alert alert-error" *ngIf="error">{{ error }}</div>
 
-  <table class="table" *ngIf="!loading">
-    <thead>
-      <tr>
-        <th>Fecha</th>
-        <th>Descripción</th>
-        <th>Concepto</th>
-        <th>Importe</th>
-        <th>Categoría</th>
-        <th>Acción</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr *ngFor="let t of transactions">
-        <td>{{ t.operationDate }}</td>
-        <td>{{ t.description }}</td>
-        <td>{{ t.concept }}</td>
-        <td class="amount">{{ t.amount }} {{ t.currency }}</td>
-        <td>
-          <select
-            (change)="onCategoryChange(t.id, $event)"
-            [value]="t.categoryId || ''"
-          >
-            <option value="">Sin categoría</option>
-            <option *ngFor="let c of categories" [value]="c.id">
-              {{ c.name }}
-            </option>
-          </select>
-        </td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
+  <div class="table-wrapper" *ngIf="!loading">
+    <table class="table">
+      <thead>
+        <tr>
+          <th>Fecha</th>
+          <th>Descripción</th>
+          <th>Concepto</th>
+          <th class="text-right">Importe</th>
+          <th>Categoría</th>
+          <th class="text-right">Acción</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let t of transactions">
+          <td>{{ t.operationDate }}</td>
+          <td>{{ t.description }}</td>
+          <td>{{ t.concept }}</td>
+          <td class="text-right amount">
+            {{ t.amount | number:'1.2-2' }} {{ t.currency }}
+          </td>
+          <td>
+            <span
+              class="badge category-badge"
+              [class.bg-green]="t.categoryId === 1"
+              [class.bg-red]="t.categoryId === 2"
+              [class.bg-blue]="t.categoryId === 3"
+              [class.bg-purple]="t.categoryId === 4"
+              [class.bg-orange]="t.categoryId === 5"
+              [class.bg-gray]="t.categoryId === 6"
+              [class.bg-teal]="t.categoryId === 7"
+            >
+              {{ categoryName(t.categoryId) }}
+            </span>
+          </td>
+          <td class="text-right">
+            <select
+              (change)="onCategoryChange(t.id, $event)"
+              [value]="t.categoryId || ''"
+              class="category-select"
+            >
+              <option value="">Sin categoría</option>
+              <option *ngFor="let c of categories" [value]="c.id">{{ c.name }}</option>
+            </select>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
 
-  <p *ngIf="loading">Cargando...</p>
-  <p *ngIf="transactions.length === 0 && !error && !loading">
-    No hay movimientos registrados.
-  </p>
+  <p *ngIf="loading" class="loading-text">Cargando...</p>
+  <div *ngIf="transactions.length === 0 && !error && !loading" class="empty-state">
+    <p>No hay movimientos registrados.</p>
+    <p class="small">Importa tu primer archivo Excel o añade movimientos manualmente.</p>
+  </div>
 </div>

@@ -1,7 +1,10 @@
 <div class="page">
   <div class="page-header">
-    <h1>Categorías</h1>
-    <a routerLink="create" class="btn">Nueva categoría</a>
+    <div>
+      <h1>Categorías</h1>
+      <p class="subtitle">Organiza tus transacciones por categoría</p>
+    </div>
+    <a routerLink="create" class="btn btn-primary">Nueva categoría</a>
   </div>
 
   <div class="alert alert-error" *ngIf="error">{{ error }}</div>
@@ -12,7 +15,7 @@
         <th>Nombre</th>
         <th>Descripción</th>
         <th>Estado</th>
-        <th>Acciones</th>
+        <th class="text-right">Acciones</th>
       </tr>
     </thead>
     <tbody>
@@ -20,11 +23,13 @@
         <td>{{ c.name }}</td>
         <td>{{ c.description }}</td>
         <td>
-          <span class="badge" [class.active]="c.isActive === 1"
+          <span
+            class="badge"
+            [class.active]="c.isActive === 1"
             >{{ c.isActive === 1 ? 'Activa' : 'Inactiva' }}</span
           >
         </td>
-        <td>
+        <td class="text-right">
           <button class="btn btn-sm" (click)="toggleStatus(c, c.isActive !== 1)">
             {{ c.isActive === 1 ? 'Desactivar' : 'Activar' }}
           </button>
@@ -36,5 +41,8 @@
     </tbody>
   </table>
 
-  <p *ngIf="loading">Cargando...</p>
+  <p *ngIf="loading" class="loading-text">Cargando...</p>
+  <p *ngIf="categories.length === 0 && !error && !loading" class="empty-text">
+    No hay categorías registradas.
+  </p>
 </div>

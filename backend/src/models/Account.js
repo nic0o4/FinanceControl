@@ -28,24 +28,42 @@ class Account {
     return db.prepare(sql).all(params);
   }
 
-  static create({ description, bankName = '', accountType = 'OTHER', currency = 'EUR' }) {
+  static create({
+    description,
+    bankName = '',
+    accountType = 'OTHER',
+    currency = 'EUR',
+    importSkipRows = 0,
+    importColumnMapping = {},
+  }) {
     if (!ACCOUNT_TYPES.includes(accountType)) {
       accountType = 'OTHER';
     }
+    const mappingJson = typeof importColumnMapping === 'string'
+      ? importColumnMapping
+      : JSON.stringify(importColumnMapping);
     const result = db.prepare(
-      `INSERT INTO accounts (description, bank_name, account_type, currency, is_active, created_at, updated_at)
-       VALUES (?, ?, ?, ?, 1, datetime('now'), datetime('now'))`
-    ).run(description, bankName, accountType, currency);
+      `INSERT INTO accounts (description, bank_name, account_type, currency, is_active, import_skip_rows, import_column_mapping, created_at, updated_at)
+       VALUES (?, ?, ?, ?, 1, ?, ?, datetime('now'), datetime('now'))`
+    ).run(description, bankName, accountType, currency, importSkipRows, mappingJson);
     return this.findById(result.lastInsertRowid);
   }
 
-  static update(id, { description, bankName, accountType, currency }) {
+  static update(id, { description, bankName, accountType, currency, importSkipRows, importColumnMapping }) {
     const fields = [];
     const params = [];
     if (description !== undefined) { fields.push('description = ?'); params.push(description); }
     if (bankName !== undefined) { fields.push('bank_name = ?'); params.push(bankName); }
     if (accountType !== undefined) { fields.push('account_type = ?'); params.push(accountType); }
     if (currency !== undefined) { fields.push('currency = ?'); params.push(currency); }
+    if (importSkipRows !== undefined) { fields.push('import_skip_rows = ?'); params.push(importSkipRows); }
+    if (importColumnMapping !== undefined) {
+      const mappingJson = typeof importColumnMapping === 'string'
+        ? importColumnMapping
+        : JSON.stringify(importColumnMapping);
+      fields.push('import_column_mapping = ?');
+      params.push(mappingJson);
+    }
     if (fields.length === 0) return this.findById(id);
     fields.push('updated_at = datetime(\'now\')');
     params.push(id);

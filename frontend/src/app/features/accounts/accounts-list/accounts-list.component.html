@@ -1,7 +1,10 @@
 <div class="page">
   <div class="page-header">
-    <h1>Cuentas bancarias</h1>
-    <a routerLink="create" class="btn">Nueva cuenta</a>
+    <div>
+      <h1>Cuentas bancarias</h1>
+      <p class="subtitle">Administra tus cuentas y saldos</p>
+    </div>
+    <a routerLink="create" class="btn btn-primary">Nueva cuenta</a>
   </div>
 
   <div class="alert alert-error" *ngIf="error">{{ error }}</div>
@@ -12,9 +15,9 @@
         <th>Descripción</th>
         <th>Banco</th>
         <th>Tipo</th>
-        <th>Moneda</th>
+        <th class="text-right">Moneda</th>
         <th>Estado</th>
-        <th>Acciones</th>
+        <th class="text-right">Acciones</th>
       </tr>
     </thead>
     <tbody>
@@ -22,23 +25,78 @@
         <td>{{ a.description }}</td>
         <td>{{ a.bankName }}</td>
         <td>{{ a.accountType }}</td>
-        <td>{{ a.currency }}</td>
+        <td class="text-right">{{ a.currency }}</td>
         <td>
-          <span class="badge" [class.active]="a.isActive === 1"
+          <span
+            class="badge"
+            [class.active]="a.isActive === 1"
             >{{ a.isActive === 1 ? 'Activa' : 'Inactiva' }}</span
           >
         </td>
-        <td>
+        <td class="text-right">
           <button class="btn btn-sm" (click)="toggleStatus(a, a.isActive !== 1)">
             {{ a.isActive === 1 ? 'Desactivar' : 'Activar' }}
+          </button>
+          <button class="btn btn-sm btn-ghost" (click)="openConfigModal(a)">
+            Configurar importación
           </button>
         </td>
       </tr>
     </tbody>
   </table>
 
-  <p *ngIf="loading">Cargando...</p>
-  <p *ngIf="accounts.length === 0 && !error && !loading">
+  <p *ngIf="loading" class="loading-text">Cargando...</p>
+  <p *ngIf="accounts.length === 0 && !error && !loading" class="empty-text">
     No hay cuentas registradas.
   </p>
+
+  <!-- Import configuration modal -->
+  <div *ngIf="showConfigModal" class="modal-backdrop" (click)="closeConfigModal()">
+    <div class="modal" (click)="$event.stopPropagation()">
+      <div class="modal-header">
+        <h3>Configurar importación — {{ configuringAccount?.description }}</h3>
+        <button class="btn-close" (click)="closeConfigModal()">×</button>
+      </div>
+      <div class="modal-body">
+        <div class="field">
+          <label>Filas a omitir antes del encabezado</label>
+          <input
+            type="number"
+            [(ngModel)]="configSkipRows"
+            min="0"
+            placeholder="0"
+          />
+          <small class="hint">Número de filas a saltar antes de la fila de encabezados del archivo Excel.</small>
+        </div>
+
+        <div class="field">
+          <label>Mapeo de columnas</label>
+          <small class="hint">Seleccione qué columna de Excel corresponde a cada campo de la transacción.</small>
+          <table class="table mapping-table">
+            <thead>
+              <tr>
+                <th>Campo</th>
+                <th>Columna de Excel</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let field of mappingFields">
+                <td>{{ field.label }}</td>
+                <td>
+                  <select [(ngModel)]="configColumnMapping[field.key]">
+                    <option *ngFor="let opt of columnOptions" [value]="opt.value">{{ opt.label }}</option>
+                  </select>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="actions" style="justify-content: flex-end; gap: 0.5rem; margin-top: 1rem;">
+          <button class="btn btn-ghost" (click)="closeConfigModal()">Cancelar</button>
+          <button class="btn btn-primary" (click)="saveConfig()">Guardar configuración</button>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>

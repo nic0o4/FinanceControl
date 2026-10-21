@@ -1,33 +1,73 @@
 <div class="page">
-  <h1>Panel de control</h1>
+  <div class="page-header">
+    <div>
+      <h1>Panel de control</h1>
+      <p class="subtitle">Resumen de tus finanzas personales</p>
+    </div>
+    <a routerLink="../transactions" class="btn btn-primary">
+      Ver movimientos
+    </a>
+  </div>
+
   <div class="alert alert-error" *ngIf="error">{{ error }}</div>
 
   <div class="stats-grid" *ngIf="!loading">
-    <div class="stat-card">
-      <div class="stat-label">Cuentas activas</div>
-      <div class="stat-value">{{ stats.activeAccounts ?? 0 }}</div>
+    <div class="stat-card stat-card--income">
+      <div class="stat-card-icon">💰</div>
+      <div class="stat-card-body">
+        <div class="stat-label">Ingresos totales</div>
+        <div class="stat-value">{{ stats.totalIncome ?? 0 | currency:'EUR' }}</div>
+        <div class="stat-trend stat-trend--up">▲ vs mes anterior</div>
+      </div>
     </div>
-    <div class="stat-card">
-      <div class="stat-label">Total movimientos</div>
-      <div class="stat-value">{{ stats.totalTransactions ?? 0 }}</div>
+    <div class="stat-card stat-card--expense">
+      <div class="stat-card-icon">💸</div>
+      <div class="stat-card-body">
+        <div class="stat-label">Gastos totales</div>
+        <div class="stat-value">{{ stats.totalExpense ?? 0 | currency:'EUR' }}</div>
+        <div class="stat-trend stat-trend--down">▼ vs mes anterior</div>
+      </div>
     </div>
-    <div class="stat-card">
-      <div class="stat-label">Movimientos pendientes</div>
-      <div class="stat-value">{{ stats.pendingTransactions ?? 0 }}</div>
+    <div class="stat-card stat-card--balance">
+      <div class="stat-card-icon">🏦</div>
+      <div class="stat-card-body">
+        <div class="stat-label">Saldo neto</div>
+        <div class="stat-value">{{ stats.netAmount ?? 0 | currency:'EUR' }}</div>
+        <div class="stat-trend stat-trend--neutral">Sin cambio</div>
+      </div>
     </div>
-    <div class="stat-card">
-      <div class="stat-label">Ingresos totales</div>
-      <div class="stat-value">{{ stats.totalIncome ?? 0 }}</div>
+    <div class="stat-card stat-card--accounts">
+      <div class="stat-card-icon">💳</div>
+      <div class="stat-card-body">
+        <div class="stat-label">Cuentas activas</div>
+        <div class="stat-value">{{ stats.activeAccounts ?? 0 }}</div>
+        <div class="stat-trend stat-trend--neutral"></div>
+      </div>
     </div>
-    <div class="stat-card">
-      <div class="stat-label">Gastos totales</div>
-      <div class="stat-value">{{ stats.totalExpense ?? 0 }}</div>
+    <div class="stat-card stat-card--transactions">
+      <div class="stat-card-icon">📋</div>
+      <div class="stat-card-body">
+        <div class="stat-label">Total movimientos</div>
+        <div class="stat-value">{{ stats.totalTransactions ?? 0 }}</div>
+        <div class="stat-trend stat-trend--neutral"></div>
+      </div>
     </div>
-    <div class="stat-card">
-      <div class="stat-label">Saldo neto</div>
-      <div class="stat-value">{{ stats.netAmount ?? 0 }}</div>
+    <div class="stat-card stat-card--pending">
+      <div class="stat-card-icon">⏳</div>
+      <div class="stat-card-body">
+        <div class="stat-label">Movimientos pendientes</div>
+        <div class="stat-value">{{ stats.pendingTransactions ?? 0 }}</div>
+        <div class="stat-trend stat-trend--neutral"></div>
+      </div>
     </div>
   </div>
 
-  <p *ngIf="loading">Cargando...</p>
+  <div *ngIf="loading" class="empty-state">
+    <p>Cargando estadísticas...</p>
+  </div>
+
+  <div *ngIf="stats && !loading && (stats.totalTransactions ?? 0) === 0" class="empty-state">
+    <p>No hay movimientos registrados aún.</p>
+    <p class="small">Importa tu primer archivo Excel o añade movimientos manualmente.</p>
+  </div>
 </div>
